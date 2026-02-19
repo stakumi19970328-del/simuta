@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>レッスン予約 — Pilates Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="booking.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Pilates Studio</a>
+      <nav class="nav">
+        <a href="index.html#about">スタジオについて</a>
+        <a href="index.html#classes">クラス</a>
+        <a href="index.html#price">料金</a>
+        <a href="booking.html" class="nav-current">予約</a>
+        <a href="index.html#contact">お問い合わせ</a>
+      </nav>
+      <button class="menu-btn" aria-label="メニュー" type="button">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main class="booking-main">
+    <section class="section booking-section">
+      <div class="container">
+        <span class="section-label">予約</span>
+        <h1 class="section-title">レッスン予約</h1>
+        <p class="booking-lead">ご希望のクラス・日時を選び、お名前と連絡先をご入力ください。</p>
+
+        <form id="booking-form" class="booking-form" novalidate>
+          <div class="form-block">
+            <label class="form-label" for="classType">クラス</label>
+            <select id="classType" name="classType" required>
+              <option value="">選択してください</option>
+              <option value="mat">マットピラティス</option>
+              <option value="reformer">マンツーマン マシンピラティス（リフォーマー）</option>
+              <option value="cadillac">マンツーマン キャデラック</option>
+              <option value="private">プライベートレッスン</option>
+            </select>
+          </div>
+
+          <div class="form-block">
+            <label class="form-label" for="date">希望日</label>
+            <input type="date" id="date" name="date" required min="">
+          </div>
+
+          <div class="form-block">
+            <label class="form-label">希望時間</label>
+            <div class="time-slots" id="timeSlots">
+              <!-- JSで生成 -->
+            </div>
+            <input type="hidden" id="time" name="time" value="">
+          </div>
+
+          <div class="form-row">
+            <div class="form-block">
+              <label class="form-label" for="name">お名前 <span class="required">*</span></label>
+              <input type="text" id="name" name="name" required placeholder="山田 花子">
+            </div>
+            <div class="form-block">
+              <label class="form-label" for="phone">電話番号 <span class="required">*</span></label>
+              <input type="tel" id="phone" name="phone" required placeholder="090-1234-5678">
+            </div>
+          </div>
+
+          <div class="form-block">
+            <label class="form-label" for="email">メールアドレス <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required placeholder="例：mail@example.com">
+          </div>
+
+          <div class="form-block">
+            <label class="form-label" for="memo">ご要望・備考</label>
+            <textarea id="memo" name="memo" rows="3" placeholder="初めての方・体の不調などあればご記入ください"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="submitBtn">予約を送信する</button>
+          </div>
+        </form>
+
+        <div id="booking-result" class="booking-result" aria-live="polite" hidden>
+          <p class="booking-result-title">予約リクエストを受け付けました</p>
+          <p class="booking-result-text">ご記入いただいた連絡先に、確定のご連絡をさせていただきます。</p>
+          <a href="index.html" class="btn btn-outline">トップへ戻る</a>
+        </div>
+
+        <div id="booking-error" class="booking-error" aria-live="polite" hidden>
+          <p>送信に失敗しました。しばらくしてから再度お試しいただくか、お電話でご予約ください。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-logo">Pilates Studio</p>
+      <p class="footer-copy">&copy; ピラティススタジオ 無断転載を禁じます</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="booking.js"></script>
+</body>
+</html>
