@@ -1,6 +1,23 @@
+# Node
 node_modules/
+
+# 予約データ（個人情報を含むためリポジトリに含めない）
 data/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log
+*.log
+npm-debug.log*
+
+# Env（APIキー等を入れる場合）
 .env
 .env.local
-*.log

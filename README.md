@@ -1,6 +1,21 @@
-# Pilates Studio
+# ピラティススタジオ
 
 ピラティススタジオのホームページと予約システムです。
+
+## Cursor を日本語表示にする
+
+次の設定をしています。
+
+- **全体（Cursor の表示言語）:** ユーザー設定に `"locale": "ja"` を追加済み
+- **このプロジェクト:** `.vscode/settings.json` で `"locale": "ja"` を指定
+
+**まだメニューが英語のとき:**
+
+1. **Ctrl+Shift+X**（Mac は **Cmd+Shift+X**）で拡張機能を開く
+2. 「Japanese」で検索
+3. **Japanese Language Pack for Visual Studio Code** をインストール
+4. Cursor を**再起動**する
+5. 再起動後、表示言語の選択で **日本語（ja）** を選ぶ
 
 ## 構成
 
