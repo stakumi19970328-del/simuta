@@ -93,6 +93,7 @@
 
         <div id="booking-error" class="booking-error" aria-live="polite" hidden>
           <p>送信に失敗しました。しばらくしてから再度お試しいただくか、お電話でご予約ください。</p>
+          <p id="booking-error-detail" class="booking-error-detail" style="margin-top:0.5em;font-size:0.9em;opacity:0.9;"></p>
         </div>
       </div>
     </section>
@@ -106,6 +107,9 @@
   </footer>
 
   <script src="script.js"></script>
+  <!-- Supabase を使う場合は config.js に URL と anon キーを設定してください -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="booking.js"></script>
 </body>
 </html>

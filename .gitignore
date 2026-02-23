@@ -21,3 +21,6 @@ npm-debug.log*
 # Env（APIキー等を入れる場合）
 .env
 .env.local
+
+# Supabase の URL・キーを入れる設定（漏れ防止）
+config.js

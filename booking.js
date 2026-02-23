@@ -42,8 +42,79 @@
   }
 
   function getApiBase() {
-    // 同じオリジンでサーバーを立てる想定
     return '';
+  }
+
+  /** config.js で FORMSPREE_ENDPOINT が設定されていれば、予約内容をメール送信 */
+  function sendBookingEmailIfConfigured(payload) {
+    var endpoint = typeof window.FORMSPREE_ENDPOINT === 'string' ? window.FORMSPREE_ENDPOINT.trim() : '';
+    if (!endpoint) return;
+    var body = JSON.stringify({
+      _subject: '【予約】ピラティススタジオ',
+      classType: payload.classType,
+      date: payload.date,
+      time: payload.time,
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      memo: payload.memo || '(なし)'
+    });
+    fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: body
+    }).catch(function () { /* メール失敗しても予約は成功扱い */ });
+  }
+
+  /** Supabase に予約を保存する（config.js で URL とキーが設定されている場合） */
+  function sendViaSupabase(payload, onSuccess, onError) {
+    if (typeof window.SUPABASE_URL !== 'string' || !window.SUPABASE_URL ||
+        typeof window.SUPABASE_ANON_KEY !== 'string' || !window.SUPABASE_ANON_KEY) {
+      onError('config.js の URL またはキーが設定されていません。');
+      return;
+    }
+    if (typeof window.supabase === 'undefined') {
+      onError('Supabase の読み込みに失敗しました。');
+      return;
+    }
+    var client = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    var row = {
+      class_type: payload.classType,
+      date: payload.date,
+      time: payload.time,
+      name: payload.name,
+      phone: payload.phone,
+      email: payload.email,
+      memo: payload.memo || null
+    };
+    client.from('bookings').insert(row).then(function (result) {
+      if (result.error) {
+        onError(result.error.message);
+        return;
+      }
+      sendBookingEmailIfConfigured(payload);
+      onSuccess();
+    }).catch(function (err) {
+      onError(err && err.message ? err.message : '接続エラー');
+    });
+  }
+
+  /** 自前サーバー（/api/bookings）に送信する */
+  function sendViaServer(payload, onSuccess, onError) {
+    fetch((getApiBase() || '') + '/api/bookings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) {
+        if (!res.ok) throw new Error('送信に失敗しました');
+        return res.json();
+      })
+      .then(onSuccess)
+      .catch(onError);
   }
 
   form.addEventListener('submit', function (e) {
@@ -69,24 +140,23 @@
     submitBtn.disabled = true;
     submitBtn.textContent = '送信中…';
 
-    fetch((getApiBase() || '') + '/api/bookings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(function (res) {
-        if (!res.ok) throw new Error('送信に失敗しました');
-        return res.json();
-      })
-      .then(function () {
-        form.classList.add('hidden');
-        resultEl.hidden = false;
-      })
-      .catch(function () {
-        errorEl.hidden = false;
-        submitBtn.disabled = false;
-        submitBtn.textContent = '予約を送信する';
-      });
+    function showSuccess() {
+      form.classList.add('hidden');
+      resultEl.hidden = false;
+    }
+    function showError(msg) {
+      errorEl.hidden = false;
+      var detail = document.getElementById('booking-error-detail');
+      if (detail) detail.textContent = msg || '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = '予約を送信する';
+    }
+
+    if (window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+      sendViaSupabase(payload, showSuccess, showError);
+    } else {
+      sendViaServer(payload, showSuccess, showError);
+    }
   });
 
   setMinDate();
